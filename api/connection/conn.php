@@ -8,7 +8,7 @@
     try {
         $pdo = new PDO('mysql:host='.$hostname.';dbname='.$dbname, $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo 'Conexão com o banco '.$dbname.', foi realizada com sucesso';
+        /* echo 'Conexão com o banco '.$dbname.', foi realizada com sucesso'; */
     } catch (PDOException $e) {
         echo 'Erro: '.$e->getMessage();
     }
