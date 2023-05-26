@@ -4,17 +4,20 @@ include ("../connection/conn.php");
 
 $requisicao = $_REQUEST;
 
+date_default_timezone_set("America/Sao_Paulo");
+$dataLocal = date('Y-m-d H:i:s', time());
+
 if ($requisicao['operation'] == 'create') {
     try {
         // Gerar a querie de inserção de dados no B.D.
-        $sql = "INSERT INTO ATENDENTE (NOME, LOGIN, SENHA, ACESSO_ID) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO ITENSVENDA (VENDA_ID, PRODUTO_ID, DATA, ATENDENTE_ID) VALUES (?, ?, ?, ?)";
         // Iremos preparar a nossa querie para gerar o objeto de inserção ao B.D.
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            $requisicao['NOME'],
-            $requisicao['LOGIN'],
-            $requisicao['SENHA'],
-            $requisicao['ACESSO_ID']
+            $requisicao['VENDA_ID'],
+            $requisicao['PRODUTO_ID'],
+            $dataLocal,
+            $requisicao['ATENDENTE_ID']
         ]);
         $dados = array(
             'type' => 'success',
@@ -35,7 +38,7 @@ if ($requisicao['operation'] == 'read') {
     $colunas = $requisicao['columns'];
 
     // Gerar a nossa query de consulta ao banco de dados
-    $sql = "SELECT * FROM ATENDENTE WHERE 1=1";
+    $sql = "SELECT * FROM ITENSVENDA WHERE 1=1";
 
     // Obter o total de registros encontrados
     $resultados = $pdo->query($sql);
@@ -87,15 +90,14 @@ if ($requisicao['operation'] == 'read') {
 if ($requisicao['operation'] == 'update') {
     try {
         // Gerar a querie de inserção de dados no B.D.
-        $sql = "UPDATE ATENDENTE SET NOME = ?, LOGIN = ?, SENHA = ?, ACESSO_ID = ? WHERE ID = ?";
+        $sql = "UPDATE ITENSVENDA SET PRODUTO_ID = ?, DATA = ?, ATENDENTE_ID = ? WHERE VENDA_ID = ?";
         // Iremos preparar a nossa querie para gerar o objeto de inserção ao B.D.
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            $requisicao['NOME'],
-            $requisicao['LOGIN'],
-            $requisicao['SENHA'],
-            $requisicao['ACESSO_ID'],
-            $requisicao['ID']
+            $requisicao['VENDA_ID'],
+            $requisicao['PRODUTO_ID'],
+            $dataLocal,
+            $requisicao['ATENDENTE_ID']
         ]);
         $dados = array(
             'type' => 'success',
@@ -114,11 +116,11 @@ if ($requisicao['operation'] == 'update') {
 if ($requisicao['operation'] == 'delete') {
     try {
         // Gerar a querie de inserção de dados no B.D.
-        $sql = "DELETE FROM ATENDENTE WHERE ID = ?";
+        $sql = "DELETE FROM ITENSVENDA WHERE VENDA_ID = ?";
         // Iremos preparar a nossa querie para gerar o objeto de inserção ao B.D.
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            $requisicao['ID']
+            $requisicao['VENDA_ID']
         ]);
         $dados = array(
             'type' => 'success',
