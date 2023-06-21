@@ -1,0 +1,83 @@
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card shadow mt-5">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-12 col-sm-8">
+                        <h4 class="text-primary">
+                            Gerenviamento de Clientes
+                        </h4>
+                    </div>
+                    <div class="col-12 col-sm-2">
+                        <button class="btn btn-primary btn-block btn-new">
+                            Novo Registro
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-resposive">
+                    <table id="table-cliente" class="table table-houver">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Código</th>
+                                <th class="text-left">Nome</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">001</td>
+                                <td class="text-left">002</td>
+                                <td class="text-center">
+                                    <button class="btn btn-info btn-view btn-sm">Visualizar</button>
+                                    <button class="btn btn-primary btn-edit btn-sm">Editar</button>
+                                    <button class="btn btn-danger btn-delete btn-sm">Excluir</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-12 border-top">
+                        <p class="text-center">
+                            Todos os direitos reservados <br>
+                            Desenvolvido por: ViniciusCosta
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-cliente" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="my-modal-title"></h5>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-cliente">
+                    <div class="form-group">
+                        <label>Nome</label>
+                        <input type="text" name="NOME" id="NOME" class="form-control">
+                    </div>
+                    <input type="hidden" name="ID" id ="ID">
+                </form>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button class="btn col-6 col-sm-2 btn-success btn-save">Salvar</button>
+                <button data-dismiss="modal" class="btn col-6 col-sm-2 btn-secondary">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="frontend/controllers/clienteController.js"></script>
