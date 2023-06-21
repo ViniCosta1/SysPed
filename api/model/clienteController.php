@@ -27,58 +27,56 @@ if ($requisicao['operation'] == 'create') {
     echo json_encode($dados);
 }
 
-if ($requisicao['operation'] == 'read') {
-    // Obter o númeor de colunas da nossa tabela
-    $colunas = $requisicao['columns'];
+if($requestData['operacao'] == 'read'){
+    $colunas = $requestData['columns']; //Obter as colunas vindas do resquest
 
-    // Gerar a nossa query de consulta ao banco de dados
-    $sql = "SELECT * FROM CLIENTE WHERE 1=1";
+    //Preparar o comando sql para obter os dados da categoria
+    $sql = "SELECT * FROM CLIENTE WHERE 1=1 ";
 
-    // Obter o total de registros encontrados
-    $resultados = $pdo->query($sql);
-
-    // Contar quantos registros tem nesse objeto
-    $qtdLinhas = $resultado->rowCount();
-
-    // Verificar se existe algum filtro determinado
-    $filtro = $requisicao['search']['value'];
-    if (!empty($filtro)) {
-        $sql .= " AND (ID LIKE $filtro% ";
-        $sql .= " OR NOME LIKE %$filtro) ";
-    }
-
-    // Obter o total de registros encontrados filtrados
-    $resultados = $pdo->query($sql);
-
-    // Contar quantos registros tem nesse objeto filtrado
-    $totalFiltrados = $resultado->rowCount();
-
-    // Obter os valores para ordenação de registro
-    $colunaOrdem = $requisicao['ordem'][0]['column']; // obtendo a posição da coluna na ordenação
-    $ordem = $colunas[$colunaOrdem]['data']; // obtendo o nome da coluna que será ordenada
-    $direcao = $requisicao['order'][0]['dir']; // obtendo a direção da ordenação ASC | DESC
-
-    // Obter os limites para a paginação dos dados
-    $inicio = $requisicao['start']; // obtendo o inicio do limite
-    $tamanho = $requisicao['length']; // obtendo o tamanho do limite
-
-    // Realizar a nossa ordenação e os limites
-    $sql .= " ORDER BY $ordem $direcao LIMIT $inicio $tamanho ";
+    //Obter o total de registros cadastrados
     $resultado = $pdo->query($sql);
-    $dados = array();
-    while ($row = $resultado->fetch(PDO::FETCH_ASSOC)) {
-        $dados[] = array_map(null, $row);
+    $qtdeLinhas = $resultado->rowCount();
+
+    //Verificando se há filtro determinado
+    $filtro = $requestData['search']['value'];
+
+    if( !empty( $filtro ) ){
+        //Montar a expressão lógica que irá compor os filtros
+        //Aqui você deverá determinar quais colunas farão parte do filtro
+        $sql .= " AND (ID LIKE '$filtro%' ";
+        $sql .= " OR NOME LIKE '$filtro%') ";
     }
 
-    // Montar o objeto JSON no padrão DataTables
-    $json_data = array(
-        "draw" => intval($requisicao['draw']),
-        "recordsTotal" => intval($qtdLinhas),
-        "recordsFiltered" => intval($totalFiltrados),
-        "data" => $dados
-    );
+    //Obter o total dos dados filtrados
+    $resultado = $pdo->query($sql);
+    $totalFiltrados = $resultado->rowCount();
+    
+    //Obter valores para ORDER BY      
+    $colunaOrdem = $requestData['order'][0]['column']; //Obtém a posição da coluna na ordenação
+    $ordem = $colunas[$colunaOrdem]['data']; //Obtém o nome da coluna para a ordenação
+    $direcao = $requestData['order'][0]['dir']; //Obtém a direção da ordenação
 
-    echo json_encode($json_data);
+    //Obter valores para o LIMIT
+    $inicio = $requestData['start']; //Obtém o ínicio do limite
+    $tamanho = $requestData['length']; //Obtém o tamanho do limite
+
+    //Realizar o ORDER BY com LIMIT
+    $sql .= " ORDER BY $ordem $direcao LIMIT $inicio, $tamanho ";
+    $resultado = $pdo->query($sql);
+    $resultData = array();
+    while($row = $resultado->fetch(PDO::FETCH_ASSOC)){
+        $resultData[] = array_map('utf8_encode', $row);
+    }
+
+    //Monta o objeto json para retornar ao DataTable
+    $dados = array(
+        "draw" => intval($requestData['draw']),
+        "recordsTotal" => intval($qtdeLinhas),
+        "recordsFiltered" => intval($totalFiltrados),
+        "data" => $resultData
+    );
+    
+    echo json_encode($dados);
 }
 
 if ($requisicao['operation'] == 'update') {
